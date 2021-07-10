@@ -6,6 +6,7 @@ Fibonacci sequence
 
 1. Install `go mod init github.com/monkrus/fibgen.git` 
 2. Confirm postgre installation `psql --version`
+3. To start the DB `sudo -i -u postgres` and `psql`
 
 
 

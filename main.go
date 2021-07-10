@@ -1,6 +1,10 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+    "log"
+    "net/http"
+)
 
 func fibonacci(n int) int {
 	if n == 0 || n == 1 {
@@ -11,6 +15,21 @@ func fibonacci(n int) int {
 }
 
 func main() {
+        // Set routing rules
+        http.HandleFunc("/", Tmp)
+
+        //Use the default DefaultServeMux.
+        err := http.ListenAndServe(":8080", nil)
+        if err != nil {
+                log.Fatal(err)
+        }
+}
+
+func Tmp(w http.ResponseWriter, r *http.Request) {
+        io.WriteString(w, "test")
+}
+
+
 	var n, i, j int
 	j = 0
 

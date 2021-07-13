@@ -4,7 +4,31 @@ import (
 	"fmt"
     "log"
     "net/http"
+	"strings"
+	"testing"
 )
+
+func TestConstruct(t *testing.T) {
+	var tests = []struct {
+		input  int
+		expected int
+		received int
+	}{
+		// input  0, received 0
+		//  input 1, received 1
+		//  input 10, received 55
+		//  input -2, received "value needs to be equal or greater than zero"
+	
+	
+
+	for _, test := range tests {
+		if output := construct(test.input, test.received); output != test.expected {
+			t.Errorf("Test Failed: {%s} inputted, {%s} expected, recieved: {%s}\n",
+				fmt.Sprint(test.input, test.received), test.expected, output)
+		}
+	}
+
+}
 
 func fibonacci(n int) int {
 	if n == 0 || n == 1 {

@@ -35,6 +35,15 @@ func main() {
 			"message": "pong",
 		})
 	})
+	
 	r.Run() // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
+	
+	/*func (c *Context) GetInt(key string) (i int) {
+		if val, ok := c.Get(key); ok && val != nil {
+			i, _ = val.(int)
+		}
+		return
+	}
+	*/
 
 }

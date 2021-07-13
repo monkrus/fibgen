@@ -5,6 +5,8 @@ Fibonacci sequence
 
 
 1. Install `go mod init github.com/monkrus/fibgen.git` 
+2. Install gin `go get -u github.com/gin-gonic/gin`
+3. Import "github.com/gin-gonic/gin".(Optional).Import "net/http"
 2. Confirm postgre installation `psql --version`
 3. To start the DB `sudo -i -u postgres` and `psql`
 

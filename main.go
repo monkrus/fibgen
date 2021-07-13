@@ -2,6 +2,8 @@ package main
 
 import (
 	"fmt"
+
+	"github.com/gin-gonic/gin"
 )
 
 func Fibonacci(n int) int {
@@ -26,23 +28,13 @@ func main() {
 		j++
 	}
 	fmt.Println()
-}
 
-/* option 2
-func fibo() func() int {
-	first, second := 0, 1
-	return func() int {
-		ret := first
-		first, second = second, first+second
-		return ret
-	}
+	r := gin.Default()
+	r.GET("/ping", func(c *gin.Context) {
+		c.JSON(200, gin.H{
+			"message": "pong",
+		})
+	})
+	r.Run() // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
 
 }
-func main() {
-
-	f := fibo()
-	for i := 0; i < 10; i++ {
-		fmt.Println(f())
-	}
-}
-*/

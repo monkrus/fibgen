@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 
 	"github.com/gin-gonic/gin"
 )
@@ -12,6 +13,18 @@ func Fibonacci(n int) int {
 	} else {
 		return (Fibonacci(n-1) + Fibonacci(n-2))
 	}
+}
+
+type Number struct {
+	number  `json:"number"`
+	result  `json: "result"`
+}
+
+func (c *Context) GetInt(key string) (i int) {
+	if val, ok := c.Get(key); ok && val != nil {
+		i, _ = val.(int)
+	}
+	return
 }
 
 func main() {
@@ -34,16 +47,12 @@ func main() {
 		c.JSON(200, gin.H{
 			"message": "pong",
 		})
+	r.GET("/number", func(c *gin.Context) {
+    c.GetInt(Number, gin.H){
+	return	result
 	})
-	
-	r.Run() // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
-	
-	/*func (c *Context) GetInt(key string) (i int) {
-		if val, ok := c.Get(key); ok && val != nil {
-			i, _ = val.(int)
-		}
-		return
-	}
-	*/
 
-}
+	if err := r.Run(":8080"); err != nil {
+		log.Fatal(err.Error())
+	}
+	}

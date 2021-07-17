@@ -15,11 +15,11 @@ func Fibonacci(n int) int {
 	}
 }
 
-type number struct {
+/*type number struct {
     input int
     result  int
 }
-
+*/
 func main() {
 
 	var n, i, j int
@@ -40,15 +40,9 @@ func main() {
 		c.JSON(200, gin.H{
 			"message": "pong",
 		})
-	r.GET("/int", func(c *gin.Context) {
-		c.GetInt( input, gin.H ) {
-			return result
-		}
-			
-		)
-    
+	})
+
 	if err := r.Run(":8080"); err != nil {
 		log.Fatal(err.Error())
 	}
 }
-	

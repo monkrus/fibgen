@@ -15,16 +15,9 @@ func Fibonacci(n int) int {
 	}
 }
 
-type Number struct {
-	number  `json:"number"`
-	result  `json: "result"`
-}
-
-func (c *Context) GetInt(key string) (i int) {
-	if val, ok := c.Get(key); ok && val != nil {
-		i, _ = val.(int)
-	}
-	return
+type number struct {
+    input int
+    result  int
 }
 
 func main() {
@@ -47,12 +40,15 @@ func main() {
 		c.JSON(200, gin.H{
 			"message": "pong",
 		})
-	r.GET("/number", func(c *gin.Context) {
-    c.GetInt(Number, gin.H){
-	return	result
-	})
-
+	r.GET("/int", func(c *gin.Context) {
+		c.GetInt( input, gin.H ) {
+			return result
+		}
+			
+		)
+    
 	if err := r.Run(":8080"); err != nil {
 		log.Fatal(err.Error())
 	}
-	}
+}
+	

@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"log"
+	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
@@ -15,11 +16,6 @@ func Fibonacci(n int) int {
 	}
 }
 
-/*type number struct {
-    input int
-    result  int
-}
-*/
 func main() {
 
 	var n, i, j int
@@ -41,8 +37,12 @@ func main() {
 			"message": "pong",
 		})
 	})
+	r.GET("/get", func(c *gin.Context) {
+		number := c.DefaultQuery("number", "0")
+		c.String(http.StatusOK, number)
 
-	if err := r.Run(":8080"); err != nil {
-		log.Fatal(err.Error())
-	}
+		if err := r.Run(":8080"); err != nil {
+			log.Fatal(err.Error())
+		}
+	})
 }

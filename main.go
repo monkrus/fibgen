@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
@@ -38,9 +39,16 @@ func main() {
 		})
 	})
 	r.GET("/get", func(c *gin.Context) {
+		//number := c.DefaultQuery("number", "0")
+		//c.String(http.StatusOK, number)
 		number := c.DefaultQuery("number", "0")
-		c.String(http.StatusOK, number)
-
+		n, err := strconv.Atoi(number)
+		if err != nil {
+			c.String(
+				http.StatusBadRequest, "number should been a number")
+		} else {
+			c.String(http.StatusOK, fmt.Sprintf("Result is %d", Fibonacci(n)))
+		}
 		if err := r.Run(":8080"); err != nil {
 			log.Fatal(err.Error())
 		}

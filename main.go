@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"net/http"
 	"strconv"
 
@@ -44,42 +43,22 @@ func main() {
 		number := c.DefaultQuery("number", "0")
 		n, err := strconv.Atoi(number)
 		if err != nil {
-			c.String(
-				http.StatusBadRequest, "number should be a number")
+			if number == 0 {
+				c.String(
+					http.StatusBadRequest, "number should be a positive number, but it is zero")
+			}
+			if number <= 0 {
+				c.String(
+					http.StatusBadRequest, "number should be a positive number, but it is negative")
+			}
+			if number > 9223372036854775807 {
+				c.String(
+					http.StatusBadRequest, "number should be a number, but it is exceeds the maximum value if int")
+			}
 		} else {
 			c.String(http.StatusOK, fmt.Sprintf("Result is %d", Fibonacci(n)))
 		}
-		if err := r.Run(":8080"); err != nil {
-			log.Fatal(err.Error())
-		}
 
-	})
-	r.GET("/neg", func(c *gin.Context) {
-		negnumber := c.DefaultQuery("negnumber", "unknown")
-		n, err := strconv.Atoi(negnumber)
-		if err != nil {
-			c.String(http.StatusBadRequest, "number should be a  negative number")
-		} else {
-			c.String(http.StatusOK, fmt.Sprintf("Result is %d", Fibonacci(n)))
-		}
-		if err := r.Run(":8080"); err != nil {
-			log.Fatal(err.Error())
-		}
-	})
-
-	r.GET("/get", func(c *gin.Context) {
-
-		maxnumber := c.DefaultQuery("maxnumber", "0")
-		n, err := strconv.Atoi(maxnumber)
-		if err != nil {
-			c.String(
-				http.StatusBadRequest, "maxnumber should be equalt to 2147483647")
-		} else {
-			c.String(http.StatusOK, fmt.Sprintf("Result is %d", Fibonacci(n)))
-		}
-		if err := r.Run(":8080"); err != nil {
-			log.Fatal(err.Error())
-		}
 	})
 
 }

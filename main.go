@@ -43,15 +43,15 @@ func main() {
 		number := c.DefaultQuery("number", "0")
 		n, err := strconv.Atoi(number)
 		if err != nil {
-			if number == 0 {
+			if n == 0 {
 				c.String(
 					http.StatusBadRequest, "number should be a positive number, but it is zero")
 			}
-			if number <= 0 {
+			if n < 0 {
 				c.String(
 					http.StatusBadRequest, "number should be a positive number, but it is negative")
 			}
-			if number > 9223372036854775807 {
+			if n > 9223372036854775807 {
 				c.String(
 					http.StatusBadRequest, "number should be a number, but it is exceeds the maximum value if int")
 			}

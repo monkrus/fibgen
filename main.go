@@ -16,6 +16,14 @@ func Fibonacci(n int) int {
 	}
 }
 
+func setupRouter() *gin.Engine {
+	r := gin.Default()
+	r.GET("/ping", func(c *gin.Context) {
+		c.String(200, "pong")
+	})
+	return r
+}
+
 func main() {
 
 	var n, i, j int
@@ -31,12 +39,10 @@ func main() {
 	}
 	fmt.Println()
 
-	r := gin.Default()
-	r.GET("/ping", func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"message": "pong",
-		})
-	})
+	
+	r := setupRouter()
+	r.Run(":8080")
+
 	r.GET("/get", func(c *gin.Context) {
 		//number := c.DefaultQuery("number", "0")
 		//c.String(http.StatusOK, number)

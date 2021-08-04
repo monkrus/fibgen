@@ -39,7 +39,6 @@ func main() {
 	}
 	fmt.Println()
 
-	
 	r := setupRouter()
 	r.Run(":8080")
 

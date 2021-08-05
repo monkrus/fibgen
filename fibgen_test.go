@@ -32,33 +32,26 @@ func TestFibo(t *testing.T) {
 
 // test to confirm the server has been started
 func TestPingRoute(t *testing.T) {
+	//func setupRouter starts the router
 	router := setupRouter()
-
+	// start recording the  http response
 	w := httptest.NewRecorder()
+	// start new  specific request (error value is skipped)
 	req, _ := http.NewRequest("GET", "/ping", nil)
+	//  replicate the handler utulizing the response recorder and new request
 	router.ServeHTTP(w, req)
-
+	// assert the equality of request and response
+	// recorder HTTP response code
 	assert.Equal(t, 200, w.Code)
+	// response recorded in `Body` buffer
 	assert.Equal(t, "pong", w.Body.String())
 }
-func TestNum(t *testing.T) {
-	// we create a struct with inputted and expected values
-	 tests := []struct {
-		input    int
-		expected int
-		&n int 
-	}{
-		// indicate abovementioned values
-		{&n, 0},
-		{&n, 1},
-		{&n, 9223372036854775807},
-	}
-	// run range loop  for all tests
-	// where "if input is not equal to expected output, the error is created"
-	for _, test := range tests {
-		if output := Fibonacci(test.input); output != test.expected {
-			t.Errorf("Test Failed: {%d} inputted, {%d} expected, recieved: {%d}\n",
-				test.input, test.expected, output)
-		}
-	}
+
+func TestNumber (t *testing.T) {
+	router := setupRouter()
+	w := httptest.NewRecorder()
+	req, _ := http.NewRequest("GET", "/get", nil)
+	router.ServeHTTP(w, req)
+	assert.NotEqual(t, http.StatusBadRequest, w.Result())
+	assert.NotEqual(t, "number should be a positive number, but it is zero", w.Body.String())
 }

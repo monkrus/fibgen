@@ -6,7 +6,6 @@ import (
 	"testing"
 
 	"github.com/go-playground/assert/v2"
-	"golang.org/x/text/number"
 )
 
 // function TestFibo is using functionality of the testing package
@@ -48,11 +47,11 @@ func TestPingRoute(t *testing.T) {
 	assert.Equal(t, "pong", w.Body.String())
 }
 
-func TestNumber (t *testing.T) {
+func TestNumber(t *testing.T) {
 	router := setupRouter()
 	w := httptest.NewRecorder()
-	req, _ := http.NewRequest("GET", "/?number=-3", nil )
+	req, _ := http.NewRequest("GET", "/?number=-3", nil)
 	router.ServeHTTP(w, req)
-	assert.NotEqual(t, http.StatusBadRequest, w.Result())
-	assert.NotEqual(t, "number should be a positive number, but it is zero", w.Body.String())
+	assert.Equal(t, http.StatusBadRequest, w.Result())
+	assert.Equal(t, "number should be a positive number, but it is zero", w.Body.String())
 }

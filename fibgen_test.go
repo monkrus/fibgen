@@ -50,8 +50,8 @@ func TestPingRoute(t *testing.T) {
 func TestNumber(t *testing.T) {
 	router := setupRouter()
 	w := httptest.NewRecorder()
-	req, _ := http.NewRequest("GET", "/?number=-3", nil)
+	req, _ := http.NewRequest("GET", "/get?number=-3", nil)
 	router.ServeHTTP(w, req)
-	assert.Equal(t, http.StatusBadRequest, w.Result())
-	assert.Equal(t, "number should be a positive number, but it is zero", w.Body.String())
+	assert.Equal(t, http.StatusBadRequest, w.Code)
+	assert.Equal(t, "number should be a positive number, but it is negative", w.Body.String())
 }

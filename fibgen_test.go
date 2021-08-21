@@ -46,7 +46,7 @@ func TestPingRoute(t *testing.T) {
 	// response recorded in `Body` buffer
 	assert.Equal(t, "pong", w.Body.String())
 }
-//must pass-passed
+// testing incorrect values (negative, non-number and big number)
 func TestNegNum(t *testing.T) {
 	router := setupRouter()
 	w := httptest.NewRecorder()
@@ -55,7 +55,28 @@ func TestNegNum(t *testing.T) {
 	assert.Equal(t, http.StatusBadRequest, w.Code)
 	assert.Equal(t, "number should be a positive number, but it is negative", w.Body.String())
 }
-//must fail-failed
+
+func TestNonNumber(t *testing.T) {
+	router := setupRouter()
+	w := httptest.NewRecorder()
+	req, _ := http.NewRequest("GET", "/get?number=$", nil)
+	router.ServeHTTP(w, req)
+	assert.Equal(t, http.StatusBadRequest, w.Code)
+	assert.Equal(t, "number should be number,but it is a non-number", w.Body.String())
+
+}
+
+func TestBigNum(t *testing.T) {
+	router := setupRouter()
+	w := httptest.NewRecorder()
+	req, _ := http.NewRequest("GET", "/get?number=9223372036854775808", nil)
+	router.ServeHTTP(w, req)
+	assert.Equal(t, http.StatusBadRequest, w.Code)
+	assert.NotEqual(t, "number is too big", w.Body.String())
+}
+
+//testing correct values (0, 10)
+
 func TestZeroNum(t *testing.T) {
 	router := setupRouter()
 	w := httptest.NewRecorder()
@@ -64,7 +85,7 @@ func TestZeroNum(t *testing.T) {
 	assert.Equal(t, http.StatusBadRequest, w.Code)
 	assert.Equal(t, "number should be zero, but it is not", w.Body.String())
 }
-//must fail-failed
+
 func TestTenNum(t *testing.T) {
 	router := setupRouter()
 	w := httptest.NewRecorder()
@@ -72,23 +93,4 @@ func TestTenNum(t *testing.T) {
 	router.ServeHTTP(w, req)
 	assert.Equal(t, http.StatusBadRequest, w.Code)
 	assert.Equal(t, "number should be ten, but it is not", w.Body.String())
-}
-//must pass-passed
-func TestNonNumber(t *testing.T) {
-	router := setupRouter()
-	w := httptest.NewRecorder()
-	req, _ := http.NewRequest("GET", "/get?number=$", nil)
-	router.ServeHTTP(w, req)
-	assert.Equal(t, http.StatusBadRequest, w.Code)
-	assert.NotEqual(t, "number should be number,but it is a non-number", w.Body.String())
-
-}
-//must pass-passed
-func TestBigNum(t *testing.T) {
-	router := setupRouter()
-	w := httptest.NewRecorder()
-	req, _ := http.NewRequest("GET", "/get?number=9223372036854775808", nil)
-	router.ServeHTTP(w, req)
-	assert.Equal(t, http.StatusBadRequest, w.Code)
-	assert.NotEqual(t, "number is too big", w.Body.String())
 }

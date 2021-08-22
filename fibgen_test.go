@@ -46,6 +46,7 @@ func TestPingRoute(t *testing.T) {
 	// response recorded in `Body` buffer
 	assert.Equal(t, "pong", w.Body.String())
 }
+
 // testing incorrect values (negative, non-number and big number)
 func TestNegNum(t *testing.T) {
 	router := setupRouter()
@@ -58,7 +59,7 @@ func TestNegNum(t *testing.T) {
 func TestNonNumber(t *testing.T) {
 	router := setupRouter()
 	w := httptest.NewRecorder()
-	req, _ := http.NewRequest("GET", "/get?number=$", nil)
+	req, _ := http.NewRequest("GET", "/get?number=($)", nil)
 	router.ServeHTTP(w, req)
 	assert.Equal(t, http.StatusBadRequest, w.Code)
 	assert.Equal(t, "number should be number,but it is a non-number", w.Body.String())

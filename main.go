@@ -6,6 +6,8 @@ import (
 	"strconv"
 
 	"github.com/gin-gonic/gin"
+	"github.com/mattn/go-colorable"
+	log "github.com/sirupsen/logrus"
 )
 
 func Fibonacci(n int) int {
@@ -49,4 +51,14 @@ func setupRouter() *gin.Engine {
 func main() {
 	r := setupRouter()
 	r.Run(":8080")
+	//coloration for logging
+	log.SetFormatter(&log.TextFormatter{ForceColors: true})
+	log.SetOutput(colorable.NewColorableStdout())
+    //sample logging
+	log.WithFields(log.Fields{
+		"user": "admin",
+	}).Info("Some info")
+
+	log.Warn("This is a warning")
+	log.Error("An error occured!")
 }

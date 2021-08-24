@@ -13,9 +13,8 @@ import (
 func Fibonacci(n int) int {
 	if n == 0 || n == 1 {
 		return n
-	} else {
-		return (Fibonacci(n-1) + Fibonacci(n-2))
 	}
+	return (Fibonacci(n-1) + Fibonacci(n-2))
 }
 
 func setupRouter() *gin.Engine {
@@ -29,19 +28,20 @@ func setupRouter() *gin.Engine {
 		if err != nil {
 			c.String(
 				http.StatusBadRequest, err.Error())
-		} else {
-			if n == 0 {
-				c.String(
-					http.StatusBadRequest, "number should be a positive number, but it is zero")
-			} else if n < 0 {
-				c.String(
-					http.StatusBadRequest, "number should be a positive number, but it is negative")
-			} else if n > 9223372036854775807 {
-				c.String(
-					http.StatusBadRequest, "number should be a number, but it is exceeds the maximum value if int")
-			} else {
-				c.String(http.StatusOK, fmt.Sprintf("Result is %d", Fibonacci(n)))
-			}
+			return
+		}
+		switch {
+		case n == 0:
+			c.String(
+				http.StatusBadRequest, "number should be a positive number, but it is zero")
+		case n < 0:
+			c.String(
+				http.StatusBadRequest, "number should be a positive number, but it is negative")
+		case n > 9223372036854775807:
+			c.String(
+				http.StatusBadRequest, "number should be a number, but it is exceeds the maximum value if int")
+		default:
+			c.String(http.StatusOK, fmt.Sprintf("Result is %d", Fibonacci(n)))
 		}
 
 	})
@@ -51,10 +51,12 @@ func setupRouter() *gin.Engine {
 func main() {
 	r := setupRouter()
 	r.Run(":8080")
+
 	//coloration for logging
 	log.SetFormatter(&log.TextFormatter{ForceColors: true})
 	log.SetOutput(colorable.NewColorableStdout())
-    //sample logging
+	
+	//sample logging
 	log.WithFields(log.Fields{
 		"user": "admin",
 	}).Info("Some info")

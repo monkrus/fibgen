@@ -40,6 +40,9 @@ func setupRouter() *gin.Engine {
 		case n > 9223372036854775807:
 			c.String(
 				http.StatusBadRequest, "number should be a number, but it is exceeds the maximum value if int")
+		case n == '$':
+			c.String(
+				http.StatusBadRequest, "number should be a number, but it is special character")
 		default:
 			c.String(http.StatusOK, fmt.Sprintf("Result is %d", Fibonacci(n)))
 		}
@@ -55,7 +58,7 @@ func main() {
 	//coloration for logging
 	log.SetFormatter(&log.TextFormatter{ForceColors: true})
 	log.SetOutput(colorable.NewColorableStdout())
-	
+
 	//sample logging
 	log.WithFields(log.Fields{
 		"user": "admin",

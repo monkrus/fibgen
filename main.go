@@ -37,7 +37,7 @@ func setupRouter() *gin.Engine {
 		case n < 0:
 			c.String(
 				http.StatusBadRequest, "number should be a positive number, but it is negative")
-		case n > 922337203685477580:
+		case n >= 922337203685477580:
 			c.String(
 				http.StatusBadRequest, "number should be a number, but it is exceeds the maximum value if int")
 		default:

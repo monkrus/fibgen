@@ -57,7 +57,7 @@ func TestNegNum(t *testing.T) {
 	assert.Equal(t, "number should be a positive number, but it is negative", w.Body.String())
 }
 
-/*func TestNonNumber(t *testing.T) {
+func TestNonNumber(t *testing.T) {
 	router := setupRouter()
 	w := httptest.NewRecorder()
 	req, _ := http.NewRequest("GET", "/get?number=($)", nil)
@@ -65,7 +65,7 @@ func TestNegNum(t *testing.T) {
 	assert.Equal(t, http.StatusBadRequest, w.Code)
 	assert.Equal(t, "strconv.Atoi: parsing \"($)\": invalid syntax", w.Body.String())
 
-}*/
+}
 
 func TestBigNum(t *testing.T) {
 	router := setupRouter()

@@ -11,7 +11,7 @@ import (
 )
 
 func Fibonacci(n int) int {
-	if n == 1 {
+	if n <= 1 {
 		return n
 	}
 	return (Fibonacci(n-1) + Fibonacci(n-2))
@@ -37,7 +37,7 @@ func setupRouter() *gin.Engine {
 		case n < 0:
 			c.String(
 				http.StatusBadRequest, "number should be a positive number, but it is negative")
-		case n == 9223372036854775807:
+		case n > 922337203685477580:
 			c.String(
 				http.StatusBadRequest, "number should be a number, but it is exceeds the maximum value if int")
 		default:

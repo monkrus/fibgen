@@ -69,10 +69,10 @@ func TestNonNumber(t *testing.T) {
 func TestBigNum(t *testing.T) {
 	router := setupRouter()
 	w := httptest.NewRecorder()
-	req, _ := http.NewRequest("GET", "/get?number=922337203685477581", nil)
+	req, _ := http.NewRequest("GET", "/get?number=2147483648", nil)
 	router.ServeHTTP(w, req)
 	assert.Equal(t, http.StatusBadRequest, w.Code)
-	//	assert.Equal(t, "number should be a number, but it exceeds the maximum value if int", w.Body.String())
+	assert.Equal(t, "number should be a number, but it exceeds the maximum value if int", w.Body.String())
 }
 
 func TestZeroNum(t *testing.T) {

@@ -11,10 +11,20 @@ import (
 )
 
 func Fibonacci(n int) int {
+	defer handleOutOfBounds()
+	if n >= 44 {
+		panic("Out of bound access for function!")
+	}
 	if n <= 1 {
 		return n
 	}
 	return (Fibonacci(n-1) + Fibonacci(n-2))
+}
+
+func handleOutOfBounds() {
+	if r := recover(); r != nil {
+		fmt.Println("Recovering from panic:", r)
+	}
 }
 
 func setupRouter() *gin.Engine {
@@ -49,8 +59,10 @@ func setupRouter() *gin.Engine {
 }
 
 func main() {
+
 	r := setupRouter()
 	r.Run(":8080")
+	fmt.Println(Fibonacci(43))
 
 	//coloration for logging
 	log.SetFormatter(&log.TextFormatter{ForceColors: true})
@@ -63,4 +75,5 @@ func main() {
 
 	log.Warn("This is a warning")
 	log.Error("An error occured!")
+
 }

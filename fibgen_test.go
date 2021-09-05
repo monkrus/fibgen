@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -37,7 +38,7 @@ func TestPingRoute(t *testing.T) {
 	// start recording the  http response
 	w := httptest.NewRecorder()
 	// start new  specific request (error value is skipped)
-	req, _ := http.NewRequest("GET", "/ping", nil)
+	req, _ := http.NewRequest("GET", UrlPong, nil)
 	//  replicate the handler utulizing the response recorder and new request
 	router.ServeHTTP(w, req)
 	// assert the equality of request and response
@@ -50,7 +51,7 @@ func TestPingRoute(t *testing.T) {
 func TestNegNum(t *testing.T) {
 	router := setupRouter()
 	w := httptest.NewRecorder()
-	req, _ := http.NewRequest("GET", "/get?number=-3", nil)
+	req, _ := http.NewRequest("GET", fmt.Sprintf("%s?number=-3", UrlFib), nil)
 	router.ServeHTTP(w, req)
 	assert.Equal(t, http.StatusBadRequest, w.Code)
 	assert.Equal(t, "number should be a positive number, but it is negative", w.Body.String())
@@ -59,7 +60,7 @@ func TestNegNum(t *testing.T) {
 func TestNonNumber(t *testing.T) {
 	router := setupRouter()
 	w := httptest.NewRecorder()
-	req, _ := http.NewRequest("GET", "/get?number=($)", nil)
+	req, _ := http.NewRequest("GET", fmt.Sprintf("%s?number=($)", UrlFib), nil)
 	router.ServeHTTP(w, req)
 	assert.Equal(t, http.StatusBadRequest, w.Code)
 	assert.Equal(t, "strconv.Atoi: parsing \"($)\": invalid syntax", w.Body.String())
@@ -69,25 +70,25 @@ func TestNonNumber(t *testing.T) {
 func TestBigNum(t *testing.T) {
 	router := setupRouter()
 	w := httptest.NewRecorder()
-	req, _ := http.NewRequest("GET", "/get?number=2147483648", nil)
+	req, _ := http.NewRequest("GET", fmt.Sprintf("%s?number=9223372036854775807", UrlFib), nil)
 	router.ServeHTTP(w, req)
 	assert.Equal(t, http.StatusBadRequest, w.Code)
-	assert.Equal(t, "number should be a number, but it exceeds the maximum value if int", w.Body.String())
+	assert.Equal(t, MaxValueErr, w.Body.String())
 }
 
 func TestZeroNum(t *testing.T) {
 	router := setupRouter()
 	w := httptest.NewRecorder()
-	req, _ := http.NewRequest("GET", "/get?number=0", nil)
+	req, _ := http.NewRequest("GET", fmt.Sprintf("%s?number=0", UrlFib), nil)
 	router.ServeHTTP(w, req)
 	assert.Equal(t, http.StatusBadRequest, w.Code)
-	assert.Equal(t, "number should be a positive number, but it is zero", w.Body.String())
+	assert.Equal(t, NonPositiveErr, w.Body.String())
 }
 
 func TestTenNum(t *testing.T) {
 	router := setupRouter()
 	w := httptest.NewRecorder()
-	req, _ := http.NewRequest("GET", "/get?number=10", nil)
+	req, _ := http.NewRequest("GET", fmt.Sprintf("%s?number=10", UrlFib), nil)
 	router.ServeHTTP(w, req)
 	assert.Equal(t, http.StatusOK, w.Code)
 	assert.Equal(t, "Result is 55", w.Body.String())

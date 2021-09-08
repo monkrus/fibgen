@@ -7,6 +7,7 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
+// covers panic, big and negative number scenarios
 func Fibonacci(n int) (retValue int) {
 	defer func() {
 		if r := recover(); r != nil {

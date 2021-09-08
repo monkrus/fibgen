@@ -9,6 +9,7 @@ type MyGinServer struct {
 	MySpecName string
 }
 
+//constructor
 func NewMyGinServer(specName string) *MyGinServer {
 	return &MyGinServer{
 		Engine:     gin.Default(),
@@ -16,6 +17,7 @@ func NewMyGinServer(specName string) *MyGinServer {
 	}
 }
 
+// set up initial routes
 func (engine *MyGinServer) InitRoutes(routes []RouteDescriptor) {
 	for _, route := range routes {
 		switch route.MethodType {

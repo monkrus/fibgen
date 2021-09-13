@@ -1,29 +1,25 @@
 package main
 
 import (
-	"math"
-
+	"github.com/gin-gonic/gin"
 	"github.com/mattn/go-colorable"
 	log "github.com/sirupsen/logrus"
 )
 
-// covers panic, big and negative number scenarios
-func Fibonacci(n int) (retValue int) {
-	defer func() {
-		if r := recover(); r != nil {
-			retValue = -1
-		}
-	}()
-	if (math.MaxInt64 / 2) < n {
-		panic("Out of bound access for function!")
-	}
+// covers big and negative number scenarios
+func Fibonacci(n int) int {
 	if n <= 1 {
 		return n
 	}
+	if n >= 25 {
+		return -1
+	}
+
 	return Fibonacci(n-1) + Fibonacci(n-2)
 }
 
 func setupRouter() *MyGinServer {
+	gin.SetMode(gin.ReleaseMode)
 	r := NewMyGinServer("test name")
 
 	r.InitRoutes([]RouteDescriptor{

@@ -64,15 +64,23 @@ func TestNonNumber(t *testing.T) {
 	router.ServeHTTP(w, req)
 	assert.Equal(t, http.StatusBadRequest, w.Code)
 	assert.Equal(t, "strconv.Atoi: parsing \"($)\": invalid syntax", w.Body.String())
-
 }
 
 func TestBigNum(t *testing.T) {
 	router := setupRouter()
 	w := httptest.NewRecorder()
-	req, _ := http.NewRequest("GET", fmt.Sprintf("%s?number=9223372036854775807", UrlFib), nil)
+	req, _ := http.NewRequest("GET", fmt.Sprintf("%s?number=9223372036854775808", UrlFib), nil)
 	router.ServeHTTP(w, req)
 	assert.Equal(t, http.StatusBadRequest, w.Code)
+	assert.Equal(t, "strconv.Atoi: parsing \"9223372036854775808\": value out of range", w.Body.String())
+}
+
+func TestOverflowNum(t *testing.T) {
+	router := setupRouter()
+	w := httptest.NewRecorder()
+	req, _ := http.NewRequest("GET", fmt.Sprintf("%s?number=50", UrlFib), nil)
+	router.ServeHTTP(w, req)
+	assert.Equal(t, http.StatusInternalServerError, w.Code)
 	assert.Equal(t, MaxValueErr, w.Body.String())
 }
 
@@ -81,8 +89,8 @@ func TestZeroNum(t *testing.T) {
 	w := httptest.NewRecorder()
 	req, _ := http.NewRequest("GET", fmt.Sprintf("%s?number=0", UrlFib), nil)
 	router.ServeHTTP(w, req)
-	assert.Equal(t, http.StatusBadRequest, w.Code)
-	assert.Equal(t, NonPositiveErr, w.Body.String())
+	assert.Equal(t, http.StatusOK, w.Code)
+	assert.Equal(t, "Result is 0", w.Body.String())
 }
 
 func TestTenNum(t *testing.T) {

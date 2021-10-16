@@ -3,6 +3,7 @@ module github.com/monkrus/fibgen.git
 go 1.16
 
 require (
+	github.com/boltdb/bolt v1.3.1
 	github.com/gin-gonic/gin v1.7.2
 	github.com/go-playground/assert/v2 v2.0.1
 	github.com/go-playground/validator/v10 v10.7.0 // indirect

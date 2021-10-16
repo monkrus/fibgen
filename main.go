@@ -1,8 +1,11 @@
 package main
 
 import (
+	"fyne.io/fyne/v2/storage/repository"
+	"github.com/boltdb/bolt"
 	"github.com/gin-gonic/gin"
 	"github.com/mattn/go-colorable"
+
 	log "github.com/sirupsen/logrus"
 )
 
@@ -35,6 +38,20 @@ func main() {
 	if err != nil {
 		log.Fatalf("Internal error: %v", err)
 	}
+
+	db, err := bolt.Open("bolt.db", 0600, nil)
+	if err != nil {
+		log.Fatal(err)
+	}
+ 
+	//check if bucket exists
+	db.Update(func(tx *bolt.Tx)error {
+	_, err :=tx.CreateBucketIfNotExists([]byte()(repository.Bucket))
+	if err !=nil {
+		return err
+	}
+	
+
 	//coloration for logging
 	log.SetFormatter(&log.TextFormatter{ForceColors: true})
 	log.SetOutput(colorable.NewColorableStdout())

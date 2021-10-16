@@ -43,14 +43,13 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
- 
+
 	//check if bucket exists
-	db.Update(func(tx *bolt.Tx)error {
+	db.Update(func(tx *bolt.Tx) error {
 	_, err :=tx.CreateBucketIfNotExists([]byte()(repository.Bucket))
-	if err !=nil {
+    if err !=nil {
 		return err
 	}
-	
 
 	//coloration for logging
 	log.SetFormatter(&log.TextFormatter{ForceColors: true})

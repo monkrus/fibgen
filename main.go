@@ -33,23 +33,44 @@ func setupRouter() *MyGinServer {
 	return r
 }
 
+const dbFile = "bolt.db"
+const bucketName = "todo"
+
+
+// open and connect DB
+db, err := bolt.Open(dbFile, 0600, nil)
+if err != nil {
+    log.Fatal(err)
+}
+defer db.Close()
+
+//check if the bucket exists
+//use db.Batch for multiple entries
+db.Update(func(tx *bolt.Tx) error {
+    b, err := tx.CreateBucketIfNotExists("todo")
+    if err != nil {
+        return fmt.Errorf("create bucket: %s", err)
+    }
+})
+//writing to the DB
+db.Update(func(tx *bolt.Tx) error {
+	b := tx.Bucket([]byte("todo"))
+	return b.Put([]byte("key"), []byte("value"))
+})
+
+//reading from DB
+db.View(func(tx *bolt.Tx) error {
+    b := tx.Bucket([]byte("todo"))
+    v := b.Get([]byte("your key"))
+    fmt.Printf("The value field for 'your key' is: %s\n", v)
+    return nil
+})
+
 func main() {
 	err := setupRouter().Run(":8080")
 	if err != nil {
 		log.Fatalf("Internal error: %v", err)
-	}
-
-	db, err := bolt.Open("bolt.db", 0600, nil)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	//check if bucket exists
-	db.Update(func(tx *bolt.Tx) error {
-	_, err :=tx.CreateBucketIfNotExists([]byte()(repository.Bucket))
-    if err !=nil {
-		return err
-	}
+	
 
 	//coloration for logging
 	log.SetFormatter(&log.TextFormatter{ForceColors: true})

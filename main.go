@@ -1,9 +1,13 @@
 package main
 
 import (
-	"log"
+	"fmt"
 
+	"github.com/boltdb/bolt"
 	"github.com/gin-gonic/gin"
+	"github.com/mattn/go-colorable"
+
+	log "github.com/sirupsen/logrus"
 )
 
 // covers big and negative number scenarios
@@ -25,15 +29,59 @@ func setupRouter() *MyGinServer {
 	r.InitRoutes([]RouteDescriptor{
 		{Path: UrlPong, Method: Pong, MethodType: HTTPGet},
 		{Path: UrlFib, Method: Fib, MethodType: HTTPGet},
+		{Path: UrlDb, Method: Db, MethodType: HTTPGet},
 	})
 
 	return r
 }
 
-func main() {
-	err := setupRouter().Run(":8080")
-	if err != nil {
-		log.Fatalf("Internal error: %v", err)
+const bucketName = "todo"
 
+func main() {
+	err := setupRouter().Run(":8081")
+	if err != nil {
+		//log.Fatalf("Internal error: %v", err)
+
+		//install
+		db, err := bolt.Open("bolt.db", 0600, nil)
+		if err != nil {
+			log.Fatal(err)
+		}
+		defer db.Close()
+
+		//init
+		db.Update(func(tx *bolt.Tx) error {
+			_, err := tx.CreateBucketIfNotExists([]byte("todo"))
+			if err != nil {
+				return fmt.Errorf("create bucket: %s", err)
+			}
+
+			return nil
+		})
+		//write new entry
+		db.Update(func(tx *bolt.Tx) error {
+			b := tx.Bucket([]byte("todo"))
+			return b.Put([]byte("key"), []byte("value"))
+		})
+
+		//read from DB
+		db.View(func(tx *bolt.Tx) error {
+			b := tx.Bucket([]byte("todo"))
+			v := b.Get([]byte("key"))
+			fmt.Printf("The value field for 'key' is: %s\n", v)
+			return nil
+		})
+
+		//coloration for logging
+		log.SetFormatter(&log.TextFormatter{ForceColors: true})
+		log.SetOutput(colorable.NewColorableStdout())
+
+		//sample logging
+		log.WithFields(log.Fields{
+			"user": "admin",
+		}).Info("Some info")
+
+		log.Warn("This is a warning")
+		log.Error("An error occured!")
 	}
 }
